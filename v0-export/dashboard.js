@@ -551,7 +551,7 @@ function roleOverview(role) {
       ["Hisob o‘zgarishi", "1", "person"],
     ],
     academic: [
-      ["Bugungi darslar", "3", "calendar"],
+      ["Bugungi darslar", String(days[0].lessons.length), "calendar"],
       ["Biriktirish navbati", "2", "task", "amber"],
       ["Joriy qaydnomalar", "2", "journal"],
     ],
@@ -585,7 +585,7 @@ function roleOverview(role) {
       ["Pedagog va xodimlar", "253", "person"],
     ],
   }[role];
-  return summary ? `<div class="overview">${stats(summary)}</div>` : "";
+  return summary ? `<div class="overview operational-overview">${stats(summary)}</div>` : "";
 }
 
 function schedule(learner) {
@@ -671,7 +671,7 @@ function personal(learner, page) {
       title,
       `<div class="body"><div class="insight-lead"><span class="dial" style="--value:${value}"><b>${value}</b></span><div><h3>${caption}</h3><small>${meta}</small></div></div><div class="insight-details">${details}</div></div>`,
       `insights ${learner ? "learner-insights" : "teacher-insights"}`,
-      pill("DEMO TAHLIL"),
+      "",
       "chart",
     );
   const insightRows = (items) => `<div class="insight-summary">${items.map(([icon, title, text, color = ""]) => `<div class="insight-summary-row"><span class="stat-icon ${color}">${glyph(icon)}</span><div><h3>${esc(title)}</h3><small>${esc(text)}</small></div></div>`).join("")}</div>`;
@@ -718,6 +718,7 @@ function chair(page) {
         ["Axborot tizimlari", "78 / 100", "16 ta"],
         ["Tarmoq xavfsizligi", "Baholar e’lon qilinmagan", "0 ta"],
       ],
+      "numeric-table",
     ),
   );
   const loads = panel(
@@ -735,6 +736,7 @@ function chair(page) {
       panel(
         "Kafedra ko‘rsatkichi",
         `<div class="body">${metric("O‘rtacha baho", "82 / 100", "32 ta e’lon qilingan natija · Kuzgi semestr")}</div>`,
+        "department-score",
       ),
     ),
     loads,
@@ -761,10 +763,10 @@ function hr(page) {
     );
   return panel(
     "Hujjatlar bo‘yicha navbat",
-    `<div class="board">${hrStages
+    `<div class="board document-board">${hrStages
       .map(
         ([stage, items]) =>
-          `<div><h3>${esc(stage)}</h3>${rows(
+          `<div class="document-stage"><h3 class="document-heading">${esc(stage)}<span class="stage-count">${items.length}</span></h3>${rows(
             items.map(([name, meta]) => [name, meta, "Hujjatni ochish"]),
             "bounded compact",
           )}</div>`,
@@ -794,12 +796,12 @@ function security(page) {
       ["Vaqt", "Hodisa", "Hisob", "Holat"],
       filtered.map(([time, event, account, status]) => [
         esc(time),
-        detailButton(event, event, `${time} · ${account}`),
+        detailButton(event, event, `${time} · ${account}`, `event-trigger ${status === "Tekshirish kerak" ? "event-rejected" : status === "Audit yozuvi" ? "event-changed" : "event-accepted"}`),
         esc(account),
-        pill(status, status === "Tekshirish kerak" ? "amber" : "green"),
+        pill(status, status === "Tekshirish kerak" ? "amber" : status === "Audit yozuvi" ? "" : "green"),
       ]),
     ),
-    "",
+    "audit-panel",
     filters,
   );
 }
@@ -816,13 +818,14 @@ function academic(page) {
       panel("Qaydnomalar", rows(registers)),
     ),
     schedule(false),
+    "academic-layout",
   );
 }
 
 function commander(page) {
   const attendance = panel(
     "Guruhlar bo‘yicha bugungi davomat",
-    simpleTable(["Guruh", "Qatnashgan", "Holat"], groupAttendance),
+    table(["Guruh", "Qatnashgan", "Holat"], groupAttendance.map(([group, count, status]) => [esc(group), esc(count), pill(status, status === "Qayd kutilmoqda" ? "amber" : "")]), "attendance-table"),
   );
   if (page === "Davomat") return attendance;
   if (page === "Guruhlar")
@@ -841,14 +844,8 @@ function commander(page) {
     attendance,
     panel(
       "Tekshirish kerak",
-      rows([
-        [
-          "AT-3/3-26",
-          "2 ta kelmagan · davomat qayd etilgan",
-          "Davomatni ko‘rish",
-        ],
-        ["AT-3/5-26", "Bugungi davomat hali kiritilmagan", "Guruhni ochish"],
-      ]),
+      `<div class="attention-list"><div class="row"><div><h3>AT-3/3-26</h3><small>2 ta kelmagan · davomat qayd etilgan</small></div>${detailButton("Davomatni ko‘rish", "AT-3/3-26", "2 ta kelmagan · davomat qayd etilgan")}</div><div class="row"><div><h3>AT-3/5-26</h3>${pill("Qayd kutilmoqda", "amber")}<small>Bugungi davomat hali kiritilmagan</small></div>${detailButton("Guruhni ochish", "AT-3/5-26", "Bugungi davomat hali kiritilmagan")}</div></div>`,
+      "attention-panel",
     ),
   );
 }
@@ -864,14 +861,13 @@ function platform(page) {
     );
   const servicePanel = panel(
     "Xizmatlar holati",
-    simpleTable(["Xizmat", "Oxirgi tekshiruv", "Holat"], services),
+    table(["Xizmat", "Oxirgi tekshiruv", "Holat"], services.map(([name, checked, status]) => [esc(name), esc(checked), pill(status, status === "Ishlamoqda" ? "green" : "amber")])),
+    "services-panel",
   );
   const jobs = panel(
     "Vazifalar navbati",
-    rows([
-      ["Ichki bildirishnoma", "Qayta urinish kutilmoqda · 09:18", "Tafsilot"],
-      ["Hisobot tayyorlash", "Navbatda · 09:21", "Tafsilot"],
-    ]),
+    `<div class="queue-list">${[["Ichki bildirishnoma", "Qayta urinish kutilmoqda", "09:18", "amber"], ["Hisobot tayyorlash", "Navbatda", "09:21", ""]].map(([name, status, time, tone]) => `<div class="row"><div><h3>${esc(name)}</h3><div class="queue-meta">${pill(status, tone)}<time>${esc(time)}</time></div></div>${detailButton("Tafsilot", name, `${status} · ${time}`)}</div>`).join("")}</div>`,
+    "queue-panel",
   );
   if (page === "Xizmatlar") return servicePanel;
   if (page === "Navbat") return jobs;
@@ -887,6 +883,7 @@ function leader(page) {
         ["Raqamli texnologiyalar", "82 / 100", "94%"],
         ["Axborot tizimlari", "79 / 100", "91%"],
       ],
+      "numeric-table",
     ),
   );
   const attendance = panel(
@@ -906,7 +903,7 @@ function leader(page) {
       "Joriy hisobotlar",
       rows([["Kafedralar natijasi", "Kuzgi semestr", "Hisobotni ko‘rish"]]),
     );
-  return grid(faculty, attendance);
+  return grid(faculty, attendance, "leader-panels");
 }
 
 function locationMap() {
@@ -1054,14 +1051,14 @@ function institutionRegistry() {
     table(
       ["Muassasa", "Hudud", "Davomat", "Amal"],
       institutionList.map((inst) => [
-        `<strong>${esc(inst.name)}</strong><br><small>${esc(inst.id)}</small>`,
+        `<span class="institution-identity"><strong>${esc(inst.name)}</strong><small>${esc(inst.id)}</small></span>`,
         esc(inst.location),
         `${inst.attendance}%`,
         button("Ochish", "institution", inst.id),
       ]),
-      "table-scroll",
+      "table-scroll institution-table",
     ),
-    "",
+    "institution-registry",
     '<input id="institution-search" class="search" type="search" aria-label="Muassasani qidirish" placeholder="Nomi yoki kodi bo‘yicha qidiring">',
   );
 }
@@ -1198,7 +1195,7 @@ function monitoring(page) {
           "%",
         ),
       ),
-      "pair",
+      "pair monitoring-panels",
     ),
     institutionRegistry(),
   );
@@ -1454,7 +1451,7 @@ headerObserver.observe($(".top"));
 function setSidebarOpen(open, restoreFocus = false) {
   $("#frame").classList.toggle("folded", !open);
   $("#toggle").setAttribute("aria-expanded", String(open));
-  $("#main").inert = mobileNavigation.matches && open;
+  $("#main").inert = false;
   if (restoreFocus) $("#toggle").focus();
 }
 $("#toggle").addEventListener("click", () => {

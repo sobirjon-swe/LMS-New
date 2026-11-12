@@ -383,8 +383,14 @@ main {
 .schedule-side {
   gap: 14px;
 }
-.insights {
-  background: linear-gradient(140deg, color-mix(in srgb, var(--soft) 85%, var(--paper)), var(--paper));
+.insights,
+.welcome,
+[data-night] .welcome,
+.admin-intro {
+  background: var(--paper);
+}
+.insight-lead {
+  background: var(--rail);
 }
 .insights .section-head {
   border-bottom: 0;
@@ -517,28 +523,386 @@ main {
   margin-bottom: 16px;
 }
 @media (min-width: 1221px) {
-  body[data-role="institution"] .top {
-    height: 44px;
-    min-height: 44px;
+  body {
+    --shell-width: 280px;
+    --shell-height: 60px;
+    font-size: 14px;
   }
-  body[data-role="institution"] .brand-area {
-    width: 204px;
+  body[data-role="institution"] {
+    --shell-width: 250px;
+    --shell-height: 54px;
   }
-  body[data-role="institution"] .frame:not(.folded) {
-    grid-template-columns: 204px minmax(0, 1fr);
+  body .top {
+    height: var(--shell-height);
+    min-height: var(--shell-height);
   }
-  body[data-role="institution"] #rail {
-    top: 44px;
-    height: calc(100dvh - 44px);
+  body .brand-area {
+    width: var(--shell-width);
   }
-  body[data-role="institution"] main {
-    padding-inline: 19px;
-  }
-  body[data-role="institution"] .titlebar h1 {
+  body .brand {
     font-size: 24px;
   }
+  body .frame:not(.folded) {
+    grid-template-columns: var(--shell-width) minmax(0, 1fr);
+  }
+  body #rail {
+    top: var(--shell-height);
+    height: calc(100dvh - var(--shell-height));
+    padding: 24px 12px 12px;
+  }
+  body .rail-context,
+  body .rail-account {
+    min-height: 58px;
+    padding: 10px;
+  }
+  body .rail-context strong,
+  body .rail-account strong {
+    font-size: 13px;
+  }
+  body .nav button {
+    min-height: 44px;
+    font-size: 14px;
+    gap: 10px;
+  }
+  body .nav button b {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+  body .top .global-search {
+    height: 40px;
+    width: min(22vw, 320px);
+    font-size: 14px;
+    margin-left: 20px;
+  }
+  body .tools > .icon,
+  body .role-picker > summary,
+  body .languages summary,
+  body .period {
+    min-height: 40px;
+    height: 40px;
+    min-width: 40px;
+  }
+  body main {
+    padding: 24px 24px 32px;
+  }
+  body .titlebar h1 {
+    font-size: 32px;
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+  }
+  body .crumb {
+    font-size: 14px;
+    margin-bottom: 22px;
+  }
+  body .section-head {
+    min-height: 60px;
+    padding: 16px 20px;
+  }
+  body .section-head h2 {
+    font-size: 14px;
+  }
+  body .btn {
+    min-height: 36px;
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+  body .body {
+    padding: 20px;
+  }
+  body .welcome {
+    padding: 20px;
+    margin-bottom: 16px;
+    border-radius: 16px;
+  }
+  body .welcome-head {
+    min-height: 96px;
+  }
+  body .learner-overview .welcome-head {
+    min-height: 123px;
+  }
+  body .welcome-person {
+    gap: 16px;
+  }
+  body .avatar-symbol {
+    width: 80px;
+    height: 80px;
+    font-size: 30px;
+  }
+  body .welcome-head h2 {
+    font-size: 24px;
+  }
+  body .welcome-person > div > small {
+    font-size: 12px;
+  }
+  body .welcome-date {
+    margin: 0;
+    font-size: 12px;
+  }
+  body .welcome-date strong {
+    font-size: 30px;
+  }
+  body .hero-facts .status {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+  body .learner-profile-tags {
+    font-size: 12px;
+    gap: 14px;
+  }
+  body .hero-strip {
+    margin-top: 20px;
+    gap: 12px;
+  }
+  body .hero-strip .stat-card {
+    min-height: 62px;
+    padding: 10px;
+  }
+  body .hero-strip .stat-card strong {
+    font-size: 14px;
+  }
+  body .hero-strip .stat-card small {
+    font-size: 11px;
+  }
+  body .quick {
+    border: 0;
+    margin-top: 20px;
+    padding-top: 0;
+    gap: 8px;
+  }
+  body .quick > .label,
+  body .quick .btn {
+    font-size: 12px;
+  }
+  body .quick .btn {
+    min-height: 30px;
+    padding: 4px 9px;
+  }
+  body .metric-grid {
+    gap: 12px;
+  }
+  body .metric-grid .stat-card {
+    min-height: 124px;
+    padding: 14px;
+    gap: 8px;
+    border-radius: 15px;
+  }
+  body .metric-grid .stat-card strong {
+    font-size: 24px;
+  }
+  body .metric-grid .stat-card small {
+    font-size: 12px;
+  }
+  body .metric-grid .stat-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+  body .overview {
+    margin-bottom: 16px;
+  }
+  body .schedule-side {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 20px;
+  }
+  body .schedule-list {
+    gap: 10px;
+    padding: 0 20px 20px;
+  }
+  body .time-row {
+    min-height: 68px;
+    padding: 10px 14px;
+    grid-template-columns: 72px minmax(0, 1fr) auto;
+    gap: 16px;
+  }
+  body .time-row h3,
+  body .time-row time {
+    font-size: 14px;
+  }
+  body .time-row small {
+    font-size: 12px;
+  }
+  body .time-row time small {
+    font-size: 11px;
+  }
+  body .lesson-actions .status,
+  body .schedule-context,
+  body .schedule .section-head .btn {
+    font-size: 11px;
+  }
+  body .lesson-actions .btn {
+    min-height: 32px;
+    font-size: 12px;
+  }
+  body .schedule-summary {
+    gap: 9px;
+    padding: 0 20px 16px;
+  }
+  body .schedule-summary > div {
+    min-height: 66px;
+    padding: 10px 4px;
+    background: var(--paper);
+    border-color: currentColor;
+  }
+  body .schedule-summary small {
+    font-size: 11px;
+  }
+  body .insight-lead {
+    padding: 14px;
+    gap: 16px;
+    min-height: 102px;
+  }
+  body .insight-lead h3 {
+    font-size: 14px;
+  }
+  body .insight-lead small {
+    font-size: 12px;
+  }
+  body .dial {
+    width: 76px;
+    height: 76px;
+  }
+  body .dial b {
+    width: 60px;
+    height: 60px;
+    font-size: 20px;
+  }
+  body .insights .body {
+    padding-top: 0;
+  }
+  body .insight-summary-row {
+    padding: 12px 0;
+    gap: 12px;
+  }
+  body .insight-summary-row h3 {
+    font-size: 13px;
+  }
+  body .insight-summary-row small {
+    font-size: 12px;
+  }
+  body .insight-summary-row .stat-icon {
+    width: 30px;
+    height: 30px;
+  }
+  body .teacher-groups {
+    gap: 14px;
+  }
+  body .teacher-indicator {
+    padding: 16px;
+    min-height: 126px;
+  }
+  body .teacher-indicator strong {
+    font-size: 24px;
+  }
+  body .teacher-indicator small,
+  body .group-head small,
+  body .group-stats small,
+  body .group-actions .btn {
+    font-size: 12px;
+  }
+  body .teacher-indicator progress {
+    height: 6px;
+    margin-top: 6px;
+  }
+  body .group-head {
+    padding: 14px;
+    gap: 12px;
+  }
+  body .group-head h3,
+  body .group-stats strong {
+    font-size: 15px;
+  }
+  body .group-stats,
+  body .group-actions {
+    padding: 12px 14px;
+  }
+  body .academic-results {
+    grid-template-columns: 250px minmax(0, 1fr) 300px;
+    gap: 20px;
+  }
+  body .academic-eyebrow,
+  body .subject-result small,
+  body .academic-summary small {
+    font-size: 11px;
+  }
+  body .subject-result {
+    padding: 12px;
+  }
+  body .subject-result-title h3,
+  body .subject-result-title strong {
+    font-size: 13px;
+  }
+  body[data-role="institution"] main {
+    padding-inline: 22px;
+  }
+  body[data-role="institution"] .titlebar h1 {
+    font-size: 30px;
+  }
   body[data-role="institution"] .crumb {
-    margin-bottom: 13px;
+    margin-bottom: 14px;
+  }
+  body .admin-intro {
+    padding: 20px;
+    margin-bottom: 22px;
+    gap: 20px;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.75fr);
+  }
+  body .admin-intro .avatar-symbol {
+    width: 58px;
+    height: 58px;
+    font-size: 26px;
+  }
+  body .admin-intro h2 {
+    font-size: 22px;
+  }
+  body .admin-intro .quick {
+    margin-top: 12px;
+  }
+  body .admin-intro .stat-card {
+    min-height: 106px;
+    padding: 10px;
+    gap: 8px;
+  }
+  body .admin-intro .stat-card strong {
+    font-size: 18px;
+    line-height: 1.2;
+  }
+  body .admin-intro .stat-card small {
+    font-size: 12px;
+  }
+  body .admin-intro .stat-icon {
+    width: 32px;
+    height: 32px;
+  }
+  body .admin-columns,
+  body .admin-columns > .stack {
+    gap: 20px;
+  }
+  body .highlight-card {
+    min-height: 240px;
+    padding: 18px;
+  }
+  body .highlight-card h2 {
+    font-size: 20px;
+  }
+  body .highlight-card small,
+  body .highlight-footer .btn {
+    font-size: 12px;
+  }
+  body .highlight-numbers strong {
+    font-size: 16px;
+  }
+  body .admin-columns .section-head h2 {
+    font-size: 16px;
+  }
+  body .admin-columns .measure {
+    gap: 32px;
+  }
+  body .admin-columns .measure label {
+    font-size: 13px;
+  }
+  body .matrix {
+    min-height: 270px;
   }
 }
 .admin-intro .avatar-symbol {
@@ -594,6 +958,256 @@ main {
 }
 .matrix {
   min-height: 200px;
+}
+.numeric-table table {
+  table-layout: fixed;
+}
+.numeric-table th:first-child {
+  width: 44%;
+}
+.numeric-table td,
+.numeric-table thead th:not(:first-child),
+.attendance-table td:nth-child(2) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.numeric-table td:last-child {
+  white-space: nowrap;
+}
+.department-score .feature {
+  background: var(--rail);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px;
+}
+.department-score .feature strong {
+  display: block;
+  color: var(--ink);
+  font-size: clamp(30px, 3vw, 48px);
+  line-height: 1.2;
+  margin-block: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.document-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+}
+.document-stage {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.document-stage .document-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  min-height: 54px;
+  margin: 0;
+  padding: 14px 18px;
+  background: var(--rail);
+  font-size: 13px;
+  border-bottom: 1px solid var(--line);
+}
+.stage-count {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  min-width: 25px;
+  padding: 2px 6px;
+  font-size: 11px;
+  text-align: center;
+}
+.document-stage > .bounded {
+  flex: 1;
+  max-height: none;
+}
+.document-stage .row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  padding: 18px;
+  height: 100%;
+  min-height: 174px;
+}
+.document-stage .row > div {
+  flex: 1;
+}
+.document-stage .row h3 {
+  background: none;
+  padding: 0;
+  margin-bottom: 7px;
+  font-size: 14px;
+}
+.document-stage .row small {
+  font-size: 12px;
+}
+.document-stage .row .btn {
+  align-self: flex-start;
+  margin-top: auto;
+}
+.audit-panel > .section-head,
+.institution-registry > .section-head {
+  align-items: center;
+  gap: 14px;
+}
+.audit-panel .tabs {
+  flex-shrink: 0;
+}
+.event-trigger {
+  font-weight: 600;
+  text-align: left;
+  justify-content: flex-start;
+  white-space: normal;
+}
+.event-rejected {
+  color: var(--red);
+  border-left: 3px solid var(--red);
+}
+.event-accepted {
+  border-left: 3px solid var(--good);
+}
+.event-changed {
+  border-left: 3px solid var(--accent);
+}
+.institution-identity {
+  display: grid;
+  gap: 4px;
+  overflow-wrap: anywhere;
+}
+.institution-identity small {
+  font-weight: 500;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.institution-registry .search {
+  width: 300px;
+  max-width: 100%;
+}
+.institution-table th:first-child {
+  width: 48%;
+}
+.institution-table td:nth-child(3),
+.institution-table thead th:nth-child(3) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.institution-table td:last-child,
+.institution-table thead th:last-child {
+  text-align: center;
+  width: 100px;
+}
+.monitoring-panels,
+.leader-panels {
+  align-items: stretch;
+}
+.monitoring-panels .section-head,
+.leader-panels .section-head {
+  min-height: 64px;
+}
+.measure label {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 12px;
+}
+.measure label strong {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.tabs .btn[aria-current="page"] {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  box-shadow: inset 0 -3px 0 #0002;
+}
+.academic-layout {
+  align-items: start;
+}
+.academic-layout .section-head {
+  min-height: 64px;
+}
+.academic-layout .time-row {
+  grid-template-columns: 62px minmax(0, 1fr);
+  gap: 8px 12px;
+}
+.academic-layout .lesson-actions {
+  grid-column: 2;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+.academic-layout .schedule-heading-tools {
+  gap: 4px;
+}
+.attention-list .status {
+  margin-top: 6px;
+}
+.attention-list small {
+  display: block;
+  margin-top: 5px;
+}
+.services-panel .status,
+.attendance-table .status {
+  white-space: normal;
+}
+.services-panel td,
+.queue-panel .row {
+  min-height: 66px;
+  padding-block: 15px;
+}
+.queue-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.queue-meta time {
+  color: var(--muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+@media (min-width: 1221px) {
+  body .registry th,
+  body .registry td {
+    padding: 14px 18px;
+    font-size: 13px;
+  }
+  body .registry thead th {
+    background: var(--rail);
+    font-weight: 600;
+  }
+  body .row h3 {
+    font-size: 14px;
+  }
+  body .row small {
+    font-size: 12px;
+  }
+  body .operational-overview .stat-card {
+    min-height: 76px;
+  }
+}
+@media (max-width: 767px) {
+  .document-board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .document-stage .row {
+    min-height: 150px;
+  }
+  .audit-panel > .section-head,
+  .institution-registry > .section-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .institution-registry .search {
+    width: 100%;
+  }
+  .academic-layout .time-row {
+    grid-template-columns: 53px minmax(0, 1fr);
+  }
 }
 .dashboard-actions {
   display: flex;
@@ -651,7 +1265,7 @@ main {
   font-size: 11px;
 }
 .highlight-card {
-  background: radial-gradient(circle at 95% 8%, #ffffff18 0 22%, transparent 23%), linear-gradient(125deg, #117d49, #0f6b42);
+  background: linear-gradient(125deg, #117d49, #0f6b42);
 }
 .highlight-card h2 {
   margin: 5px 0;
@@ -797,6 +1411,10 @@ main {
 }
 .insight-footer > .btn {
   width: 100%;
+}
+.teacher-insights .insight-lead {
+  flex-direction: row;
+  align-items: center;
 }
 .learner-insights .insight-lead {
   flex-direction: column;
@@ -1898,21 +2516,18 @@ dialog.settings-drawer {
     display: block;
   }
   .frame:not(.folded) .rail-backdrop {
-    display: block;
-    position: fixed;
-    inset: var(--header-height, 105px) 0 0;
-    z-index: 3;
-    border: 0;
-    background: #15223866;
+    display: none;
   }
   .frame:not(.folded) #rail {
-    position: fixed;
-    inset: var(--header-height, 105px) auto 0 0;
-    z-index: 4;
-    width: min(280px, 85vw);
+    position: relative;
+    inset: auto;
+    width: 100%;
     min-height: 0;
-    height: calc(100dvh - var(--header-height, 105px));
-    box-shadow: 20px 0 40px #0002;
+    height: auto;
+    max-height: 55dvh;
+    overflow-y: auto;
+    box-shadow: none;
+    border-bottom: 1px solid var(--line);
     background: var(--rail);
   }
   .nav {

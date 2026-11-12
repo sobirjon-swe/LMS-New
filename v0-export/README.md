@@ -1,6 +1,6 @@
 # AIS HKTB — offline demo
 
-ZIPni Windows’da oching va `v0-export/index.html` faylini Edge, Chrome yoki Firefox’da ishga tushiring. Butun `v0-export/` papkasini birga saqlang. Internet, server, npm, token, CDN yoki ma’lumotlar bazasi talab qilinmaydi. Bu autentifikatsiya tizimi emas, faqat sintetik frontend prototipi.
+ZIPni oching va eksport papkasidagi `index.html` faylini Edge, Chrome yoki Firefox’da ishga tushiring. Butun eksport papkasini birga saqlang. Internet, server, npm, token, CDN yoki ma’lumotlar bazasi talab qilinmaydi. Bu autentifikatsiya tizimi emas, faqat sintetik frontend prototipi.
 
 ## 12 rol
 
@@ -48,14 +48,16 @@ Barchasini administrator rolida quyidagi yo‘llar orqali ochish mumkin. Boshqa 
 
 ## Fayllar
 
-`index.html`, `base.css`, `dashboard.css`, `features.css`, `dashboard.js`, `modules.js`, `dashboard-sections.js`, `translations.js`, `app-features.js`, ushbu `README.md` va `assets/` (mahalliy shriftlar, ikonka shrifti, logotip, 3 bayroq, xarita ma’lumotlari). Hech qanday tashqi skript yoki fetch ishlatilmaydi.
+`index.html`, `base.css`, `dashboard.css`, `features.css`, `bootstrap.js`, `dashboard.js`, `modules.js`, `dashboard-sections.js`, `translations.js`, `app-features.js`, ushbu `README.md` va `assets/` (mahalliy shriftlar, ikonka shrifti, logotip, 3 bayroq, xarita ma’lumotlari). Hech qanday tashqi skript yoki fetch ishlatilmaydi.
 
 ## Tekshiruvlar va qolgan farqlar
 
-- 22–26 referenslari ko‘rildi: mos ravishda **7, 6, 9, 17, 9** ta. Referens rasmlar sahifaga fon sifatida qo‘yilmagan.
-- JavaScript sintaksisi va 18 ta ajratilgan DOM/mantiq tekshiruvi o‘tdi: 12 rol menyusi, 9 modul URL’i, ruxsatlar, kun/hafta, bo‘sh jadval, kalendar, dars konflikti/saqlash, qidiruv/sahifalash, davomat, topshiriq/ruxsat formasi, murojaat–UPVK javobi, muassasa doirasi, audit, uzun matnni xavfsiz chiqarish, til/rejim va saqlash cheklangan file URL ishga tushishi.
-- Haqiqiy brauzerda o‘qituvchi dashboardi 1296×817 da, kunduzgi/tungi rejim, inglizcha navigatsiya, davomat saqlash, header oynasi va Escape/fokus tekshirildi. 1440 px da modul va dars formasi ochildi.
-- Dars formasi tekshiruvida brauzer avtomatizatsiyasi CDP timeout bilan to‘xtadi. 1440/1024/390 px dagi barcha sahifa va modallarning to‘liq vizual sinovi, Windows’dagi haqiqiy file:// sinovi va native brauzerdagi barcha forma oqimlari yakunlanmagan. DOM sinovlari vizual sinov o‘rnini bosmaydi.
+- Ushbu moslashuvda topshiriqda ko‘rsatilgan 18 referens ochildi: 22–24 guruhlaridagi 7 asosiy rasm, 12–21 rasmlari va 08 tungi ranglar referensi. Qo‘shimcha, bu bosqichda ochilmagan rasmlarning yo‘llari taqqoslash hisobotida keltirilgan. Referenslar sahifaga fon sifatida qo‘yilmagan.
+- JavaScript sintaksisi qayta tekshirildi. Avvalgi bosqichda 18 ta ajratilgan DOM/mantiq tekshiruvi o‘tgan: 12 rol menyusi, 9 modul URL’i, ruxsatlar, kun/hafta, bo‘sh jadval, kalendar, dars konflikti/saqlash, qidiruv/sahifalash, davomat, topshiriq/ruxsat formasi, murojaat–UPVK javobi, muassasa doirasi, audit, uzun matnni xavfsiz chiqarish, til/rejim va saqlash cheklangan file URL ishga tushishi.
+- Birinchi ekranlar asl referens kengligida solishtirildi: administrator 1917×945, o‘qituvchi 1919×943, kursant 1915×942; oldingi va yangi kadrlar scrollY=0 da. O‘qituvchi jadvali 733.4 px, kursantniki 760.4 px da boshlanadi. Referenslarda ular taxminan 734 va 760 px.
+- Qolgan 9 rol 1440×1000 da alohida ochilib, skrinshotlar orqali ko‘rildi. Brauzerda 1440/1024/390 px va och/tungi holatlar bo‘yicha 72 rol hamda 54 modul tekshiruvi o‘tdi: umumiy gorizontal chiqib ketish va sidebar overlap topilmadi. Rol ekranlaridagi tekshirilgan holat belgilarining eng past kontrasti 5.39:1.
+- Rol almashtirish, modul ochish, davomatni saqlash va sahifani qayta yuklash, muassasa qidiruvi/tanlash hamda kursant–kadr–murojaat tablari tekshirildi. 390 px menyu ochilganda kontentni pastga suradi; Escape uni yopib, fokusni menyu tugmasiga qaytaradi.
+- Linux Chromium’da haqiqiy file:// eksport ochildi; Kutubxona modali ochilib yopildi, tashqi HTTP resurslari va buzilgan rasmlar aniqlanmadi. Windows, Firefox va Safari alohida sinovdan o‘tkazilmadi. Barcha formalar va modallarning har bir breakpointdagi to‘liq vizual sinovi bajarilgani da’vo qilinmaydi.
 - Natija **piksel darajasidagi 1:1 nusxa emas**. Kartalar tartibi va PreSkool uslubi AIS mazmuniga moslangan; grafiklar soddalashtirilgan sintetik ko‘rsatkichlardir. Aloqasiz transport/to‘lov modullari qo‘shilmagan.
 - UZB lotin asosiy til; kirill transliteratsiya qilinadi. RU/EN menyu, sarlavha, boshqaruv va asosiy formalarda ishlaydi; ayrim yordamchi/demo matnlar o‘zbekcha qoladi. To‘liq professional lokalizatsiya tugallanmagan.
 - Profil manzili demo matn sifatida tahrirlanadi, xarita Toshkent viloyati/AKTga bog‘langan; geokodlash yo‘q.
