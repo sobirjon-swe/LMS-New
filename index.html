@@ -1,42 +1,915 @@
 <!doctype html>
 <html lang="uz">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AIS HKTB · PreSkool uslubidagi dashboardlar</title>
-<style>
-@font-face{font-family:Ubuntu;src:url('assets/fonts/Ubuntu-Regular.woff2')}@font-face{font-family:Ubuntu;src:url('assets/fonts/Ubuntu-Bold.woff2');font-weight:700}
-:root{color-scheme:light;--bg:#f6f4f9;--paper:#fff;--ink:#231b32;--muted:#62576f;--line:#e2dce9;--accent:#6338a3;--soft:#efe7fa;--good:#235c48;--green:#e2f2e9;--warn:#785119;--amber:#faefd9;--rail:#ede8f3}
-:root[data-night]{color-scheme:dark;--bg:#191521;--paper:#241e2e;--ink:#f4edf9;--muted:#c7bad3;--line:#463951;--accent:#dec3ff;--soft:#38274d;--good:#b8ead3;--green:#244435;--warn:#f9dda6;--amber:#493920;--rail:#211a2b}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.48 Ubuntu,system-ui,sans-serif}button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}button,a,input,select,textarea,summary{outline-offset:3px}:focus-visible{outline:2px solid var(--accent)}[hidden]{display:none!important}a{color:var(--accent)}p,h1,h2,h3,dl,dd{margin:0}p+ p{margin-top:.7em}h1{font-size:clamp(2.05rem,4.5vw,3.25rem);letter-spacing:-.055em;line-height:1.03;overflow-wrap:anywhere}h2{font-size:1.2rem;letter-spacing:-.025em}h3{font-size:1rem}small,.muted{color:var(--muted)}small{font-size:.85rem}.skip{position:absolute;top:8px;left:-500px;z-index:9;background:var(--paper);padding:12px}.skip:focus{left:10px}
-.top{position:sticky;top:0;z-index:3;background:var(--paper);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px clamp(12px,2.6vw,38px)}.brand,.tools,.cluster,.section-head,.titlebar,.tabs,.languages summary,.languages button{display:flex;align-items:center;gap:10px}.brand{font-weight:700;white-space:nowrap}.brand img{object-fit:contain}.tools{flex-wrap:wrap;justify-content:flex-end}.tools select{max-width:310px}.tools select,.btn,.languages summary,input,textarea{border:1px solid var(--line);background:var(--paper);border-radius:9px;min-height:44px;padding:8px 12px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;text-align:center;text-decoration:none;font-weight:700}.btn:hover,.languages button:hover,.nav button:hover{background:var(--soft);color:var(--ink)}.primary{background:#6338a3;color:#fff;border-color:#6338a3}.primary:hover{background:#542991;color:#fff}.plain{color:var(--accent)}.icon{min-width:44px;padding:7px;font-size:1.15rem}.period{font-size:.82rem;white-space:nowrap;color:var(--muted)}.flag{object-fit:cover;border-radius:2px}.languages{position:relative}.languages summary{cursor:pointer;list-style:none;white-space:nowrap}.languages summary::-webkit-details-marker{display:none}.languages .options{position:absolute;right:0;top:calc(100% + 6px);min-width:155px;background:var(--paper);padding:5px;border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px #22133b20}.languages button{width:100%;min-height:44px;padding:6px 10px;border:0;border-radius:6px;background:transparent;text-align:left}
-.frame{display:grid;grid-template-columns:218px minmax(0,1fr);min-height:calc(100dvh - 62px)}.frame.folded{grid-template-columns:minmax(0,1fr)}.frame.folded aside{display:none}aside{background:var(--rail);border-right:1px solid var(--line);padding:23px 14px}.nav{display:grid;gap:6px}.nav button{border:0;border-radius:8px;min-height:44px;text-align:left;padding:8px 10px;background:transparent;font-weight:700;display:flex;align-items:center;gap:9px}.nav button[aria-current]{background:var(--paper);color:var(--accent);box-shadow:inset 3px 0 var(--accent)}.nav b{font-size:1.1rem;min-width:22px;text-align:center}.role-name{margin:0 9px 17px;font-size:.85rem;color:var(--muted)}main{min-width:0;width:100%;max-width:1500px;margin-inline:auto;padding:clamp(18px,3.5vw,54px);padding-top:31px}.titlebar{justify-content:space-between;align-items:flex-end;flex-wrap:wrap;margin:14px 0 26px}.titlebar>div{min-width:0}.titlebar p{margin-top:8px;color:var(--muted)}.crumb{color:var(--accent);font-weight:700;font-size:.85rem}.grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:18px;align-items:start}.pair{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}.span{grid-column:1/-1}.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;min-width:0;overflow:hidden}.section-head{justify-content:space-between;flex-wrap:wrap;min-height:62px;padding:13px 18px;border-bottom:1px solid var(--line)}.section-head h2{margin-right:auto}.body{padding:16px 18px}.stack{display:grid;gap:18px;min-width:0}.bounded{max-height:320px;overflow:auto;overscroll-behavior:contain}.compact{max-height:210px}.foot{padding:11px 18px;border-top:1px solid var(--line)}.notice{margin-top:20px;font-size:.82rem;color:var(--muted)}.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;min-height:56px;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}.row>div{min-width:0;overflow-wrap:anywhere}.row small{display:block;margin-top:2px}.row .btn{flex-shrink:0}.status{display:inline-block;white-space:nowrap;border-radius:6px;padding:4px 8px;font-size:.81rem;font-weight:700;background:var(--soft);color:var(--accent)}.green{background:var(--green);color:var(--good)}.amber{background:var(--amber);color:var(--warn)}.facts{display:flex;flex-wrap:wrap;gap:8px 20px;padding:12px 18px;color:var(--muted);font-size:.9rem}.facts strong{color:var(--ink)}.empty{padding:24px 18px;color:var(--muted)}.empty strong{display:block;color:var(--ink)}
-.schedule .section-head{background:var(--soft)}.time-row{display:grid;grid-template-columns:68px 1fr auto;gap:15px;align-items:center;padding:15px 18px;border-bottom:1px solid var(--line);min-height:80px}.time-row time{font-size:1.05rem;font-weight:700;font-variant-numeric:tabular-nums}.time-row time small,.time-row h3+small{display:block;font-weight:400}.time-row.featured{box-shadow:inset 4px 0 var(--accent);background:var(--soft)}.time-row h3{overflow-wrap:anywhere}.measure{display:grid;gap:10px}.measure label{display:flex;justify-content:space-between;gap:8px;font-size:.9rem}.measure progress{width:100%;height:8px;display:block;accent-color:#8756c4}.measure .axis{display:flex;justify-content:space-between;color:var(--muted);font-size:.8rem}.feature{background:var(--soft);padding:18px;border-radius:12px}.feature strong{display:block;font-size:2.35rem;letter-spacing:-.06em;line-height:1.15}.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line)}.board>div{min-width:0;background:var(--paper)}.board h3{padding:12px 18px;background:var(--soft)}
-.tabs{flex-wrap:wrap;margin-bottom:17px}.tabs .btn[aria-current]{color:var(--accent);background:var(--soft);border-color:var(--accent)}.registry{overflow:auto}.registry table{width:100%;border-collapse:collapse;text-align:left}.registry th,.registry td{padding:11px 16px;border-bottom:1px solid var(--line)}.registry th{background:var(--soft);font-size:.84rem}.registry td:first-child{overflow-wrap:anywhere}.registry tr:last-child td{border-bottom:0}.table-scroll{max-height:340px;overflow:auto}.table-scroll th{position:sticky;top:0}.search{width:min(100%,270px)}.map-area{display:grid;place-items:center;position:relative;background:var(--soft);padding:10px 12px;min-height:260px}.map-area svg{display:block;width:min(100%,490px);height:250px}.map-area path{fill:var(--line);stroke:var(--paper);stroke-width:2;filter:blur(.9px)}.map-area path.highlight{fill:#a47bd7;stroke:#623e91;filter:none}.map-area circle{fill:#632f9d;stroke:white;stroke-width:3}.map-area text{fill:var(--ink);font-weight:700;font-size:24px}.address{border-top:1px solid var(--line);padding:12px 18px}.institution-grid{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:stretch}.institution-grid>.panel{display:flex;flex-direction:column}.map-area{flex:1}
-dialog{background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:14px;width:min(550px,calc(100% - 24px));max-height:calc(100dvh - 30px);padding:0}dialog::backdrop{background:#22132b83}dialog form label{display:grid;gap:6px;font-weight:700}dialog textarea{width:100%;min-height:110px;resize:vertical}.message{white-space:pre-wrap;overflow-wrap:anywhere}.toast{color:var(--good);font-weight:700;padding:6px 0}.toast:empty{display:none}
-@media(max-width:1080px){.frame{grid-template-columns:180px minmax(0,1fr)}.top{position:relative}.period{white-space:normal}main{padding-inline:24px}.grid{gap:12px}.section-head,.body,.row{padding-inline:13px}}
-@media(max-width:810px){.frame{display:block}aside{border-right:0;border-bottom:1px solid var(--line);padding:8px 12px}.role-name{display:none}.nav{display:flex;flex-wrap:wrap;gap:3px}.nav button{font-size:.88rem}.grid,.pair,.institution-grid{grid-template-columns:minmax(0,1fr)}.span{grid-column:auto}.top{flex-wrap:wrap}.tools{justify-content:flex-start}.tools select{max-width:min(300px,100%)}main{padding-inline:15px}.board{grid-template-columns:minmax(0,1fr)}.board>div{display:grid;align-content:start}.map-area{min-height:220px}.map-area svg{height:220px}}
-.map-area svg{height:clamp(220px,26vw,320px)}
-@media(max-width:420px){.tools select{max-width:100%;flex:1 1 100%}.period{order:2}.time-row{grid-template-columns:55px minmax(0,1fr);gap:8px;padding-inline:13px}.time-row>.btn{grid-column:2;justify-self:start}.row{flex-wrap:wrap}.registry th,.registry td{padding:8px 7px;font-size:.82rem}.registry .btn{padding-inline:6px}.registry .status{white-space:normal}}
-</style>
-<link rel="stylesheet" href="base.css">
-<link rel="stylesheet" href="dashboard.css">
-<a class="skip" href="#main">Asosiy mazmunga o‘tish</a>
-<header class="top">
- <div class="brand-area"><div class="brand"><img src="assets/mo-logo-compact.png" width="38" height="38" alt=""><span>AIS HKTB</span></div><button id="toggle" class="btn icon" type="button" aria-label="Yon menyu" aria-controls="rail" aria-expanded="true"><span class="glyph" aria-hidden="true">&#xf0c9;</span></button></div>
- <button class="btn global-search" type="button" data-action="search" aria-label="Bo‘limni qidirish"><span class="glyph" aria-hidden="true">&#xf002;</span><span>Bo‘limni qidirish</span></button>
- <div class="tools">
-  <span class="period"><span class="glyph" aria-hidden="true">&#xf133;</span> <span>O‘quv yili · 2026 / 2027</span><span class="semester">Kuzgi semestr</span></span>
-  <details class="languages"><summary id="language"></summary><div class="options" id="languages"></div></details>
-  <button class="btn icon" type="button" data-action="shortcuts" aria-label="Tezkor amallar"><span class="glyph" aria-hidden="true">&#xf0fe;</span></button>
-  <button class="btn icon" id="theme" type="button" aria-label="Tungi rejim" aria-pressed="false"><span class="glyph" aria-hidden="true">&#xf186;</span></button>
-  <button class="btn icon" id="inbox" type="button" aria-label="Bildirishnomalar" hidden><span class="glyph" aria-hidden="true">&#xf0f3;</span><span id="unread"></span></button>
-  <button class="btn icon" type="button" data-action="search" aria-label="Bo‘limlar"><span class="glyph" aria-hidden="true">&#xf009;</span></button>
-  <details class="role-picker"><summary class="btn icon" aria-label="Maketdagi rolni tanlash"><span class="glyph" aria-hidden="true">&#xf007;</span></summary><label class="role-switch">Rol<select id="role" aria-label="Maketdagi rol"></select></label></details>
- </div>
-</header>
-<div class="frame" id="frame"><aside id="rail"><div class="rail-context"><span class="glyph rail-emblem" aria-hidden="true">&#xf1ad;</span><div><strong id="rail-org">AIS HKTB</strong><p id="role-name" class="role-name"></p></div></div><nav class="nav" id="nav" aria-label="Rol menyusi"></nav><button type="button" class="rail-account btn" data-action="role-picker"><span class="glyph" aria-hidden="true">&#xf007;</span><span><strong id="rail-account-name"></strong><small>Rolni almashtirish</small></span><span aria-hidden="true">⌄</span></button></aside>
-<main id="main" tabindex="-1"><div class="titlebar" id="title"></div><p class="crumb" id="scope"></p><p class="toast" id="feedback" role="status"></p><div id="workspace"></div><p class="notice">Dashboard maketi · namunaviy ma’lumotlar</p></main></div>
-<dialog id="dialog" aria-labelledby="dialog-title"><div class="section-head"><h2 id="dialog-title"></h2><form method="dialog"><button class="btn" type="submit">Yopish</button></form></div><div class="body" id="dialog-body"></div></dialog>
-<script src="assets/js/prototype-uzbekistan-map.js"></script>
-<script src="dashboard.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AIS HKTB · Ta’lim boshqaruvi</title>
+  <meta
+    name="description"
+    content="AIS HKTB — 12 rol, o‘quv modullari va mahalliy demo ma’lumotlari bilan internetsiz ishlaydigan ta’lim boshqaruvi prototipi."
+  />
+  <meta name="theme-color" content="#354fdb" />
+  <style>
+    @font-face {
+      font-family: Ubuntu;
+      src: url("assets/fonts/Ubuntu-Regular.woff2");
+    }
+    @font-face {
+      font-family: Ubuntu;
+      src: url("assets/fonts/Ubuntu-Bold.woff2");
+      font-weight: 700;
+    }
+    :root {
+      color-scheme: light;
+      --bg: #f6f4f9;
+      --paper: #fff;
+      --ink: #231b32;
+      --muted: #62576f;
+      --line: #e2dce9;
+      --accent: #6338a3;
+      --soft: #efe7fa;
+      --good: #235c48;
+      --green: #e2f2e9;
+      --warn: #785119;
+      --amber: #faefd9;
+      --rail: #ede8f3;
+    }
+    :root[data-night] {
+      color-scheme: dark;
+      --bg: #191521;
+      --paper: #241e2e;
+      --ink: #f4edf9;
+      --muted: #c7bad3;
+      --line: #463951;
+      --accent: #dec3ff;
+      --soft: #38274d;
+      --good: #b8ead3;
+      --green: #244435;
+      --warn: #f9dda6;
+      --amber: #493920;
+      --rail: #211a2b;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font:
+        15px/1.48 Ubuntu,
+        system-ui,
+        sans-serif;
+    }
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+      color: inherit;
+    }
+    button {
+      cursor: pointer;
+    }
+    button,
+    a,
+    input,
+    select,
+    textarea,
+    summary {
+      outline-offset: 3px;
+    }
+    :focus-visible {
+      outline: 2px solid var(--accent);
+    }
+    [hidden] {
+      display: none !important;
+    }
+    a {
+      color: var(--accent);
+    }
+    p,
+    h1,
+    h2,
+    h3,
+    dl,
+    dd {
+      margin: 0;
+    }
+    p + p {
+      margin-top: 0.7em;
+    }
+    h1 {
+      font-size: clamp(2.05rem, 4.5vw, 3.25rem);
+      letter-spacing: -0.055em;
+      line-height: 1.03;
+      overflow-wrap: anywhere;
+    }
+    h2 {
+      font-size: 1.2rem;
+      letter-spacing: -0.025em;
+    }
+    h3 {
+      font-size: 1rem;
+    }
+    small,
+    .muted {
+      color: var(--muted);
+    }
+    small {
+      font-size: 0.85rem;
+    }
+    .skip {
+      position: absolute;
+      top: 8px;
+      left: -500px;
+      z-index: 9;
+      background: var(--paper);
+      padding: 12px;
+    }
+    .skip:focus {
+      left: 10px;
+    }
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px clamp(12px, 2.6vw, 38px);
+    }
+    .brand,
+    .tools,
+    .cluster,
+    .section-head,
+    .titlebar,
+    .tabs,
+    .languages summary,
+    .languages button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .brand img {
+      object-fit: contain;
+    }
+    .tools {
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .tools select {
+      max-width: 310px;
+    }
+    .tools select,
+    .btn,
+    .languages summary,
+    input,
+    textarea {
+      border: 1px solid var(--line);
+      background: var(--paper);
+      border-radius: 9px;
+      min-height: 44px;
+      padding: 8px 12px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .btn:hover,
+    .languages button:hover,
+    .nav button:hover {
+      background: var(--soft);
+      color: var(--ink);
+    }
+    .primary {
+      background: #6338a3;
+      color: #fff;
+      border-color: #6338a3;
+    }
+    .primary:hover {
+      background: #542991;
+      color: #fff;
+    }
+    .plain {
+      color: var(--accent);
+    }
+    .icon {
+      min-width: 44px;
+      padding: 7px;
+      font-size: 1.15rem;
+    }
+    .period {
+      font-size: 0.82rem;
+      white-space: nowrap;
+      color: var(--muted);
+    }
+    .flag {
+      object-fit: cover;
+      border-radius: 2px;
+    }
+    .languages {
+      position: relative;
+    }
+    .languages summary {
+      cursor: pointer;
+      list-style: none;
+      white-space: nowrap;
+    }
+    .languages summary::-webkit-details-marker {
+      display: none;
+    }
+    .languages .options {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      min-width: 155px;
+      background: var(--paper);
+      padding: 5px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px #22133b20;
+    }
+    .languages button {
+      width: 100%;
+      min-height: 44px;
+      padding: 6px 10px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      text-align: left;
+    }
+    .frame {
+      display: grid;
+      grid-template-columns: 218px minmax(0, 1fr);
+      min-height: calc(100dvh - 62px);
+    }
+    .frame.folded {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .frame.folded aside {
+      display: none;
+    }
+    aside {
+      background: var(--rail);
+      border-right: 1px solid var(--line);
+      padding: 23px 14px;
+    }
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+    .nav button {
+      border: 0;
+      border-radius: 8px;
+      min-height: 44px;
+      text-align: left;
+      padding: 8px 10px;
+      background: transparent;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .nav button[aria-current] {
+      background: var(--paper);
+      color: var(--accent);
+      box-shadow: inset 3px 0 var(--accent);
+    }
+    .nav b {
+      font-size: 1.1rem;
+      min-width: 22px;
+      text-align: center;
+    }
+    .role-name {
+      margin: 0 9px 17px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    main {
+      min-width: 0;
+      width: 100%;
+      max-width: 1500px;
+      margin-inline: auto;
+      padding: clamp(18px, 3.5vw, 54px);
+      padding-top: 31px;
+    }
+    .titlebar {
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      margin: 14px 0 26px;
+    }
+    .titlebar > div {
+      min-width: 0;
+    }
+    .titlebar p {
+      margin-top: 8px;
+      color: var(--muted);
+    }
+    .crumb {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .pair {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: stretch;
+    }
+    .span {
+      grid-column: 1/-1;
+    }
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .section-head {
+      justify-content: space-between;
+      flex-wrap: wrap;
+      min-height: 62px;
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .section-head h2 {
+      margin-right: auto;
+    }
+    .body {
+      padding: 16px 18px;
+    }
+    .stack {
+      display: grid;
+      gap: 18px;
+      min-width: 0;
+    }
+    .bounded {
+      max-height: 320px;
+      overflow: auto;
+      overscroll-behavior: contain;
+    }
+    .compact {
+      max-height: 210px;
+    }
+    .foot {
+      padding: 11px 18px;
+      border-top: 1px solid var(--line);
+    }
+    .notice {
+      margin-top: 20px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 18px;
+      min-height: 56px;
+      border-bottom: 1px solid var(--line);
+    }
+    .row:last-child {
+      border-bottom: 0;
+    }
+    .row > div {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+    .row small {
+      display: block;
+      margin-top: 2px;
+    }
+    .row .btn {
+      flex-shrink: 0;
+    }
+    .status {
+      display: inline-block;
+      white-space: nowrap;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 0.81rem;
+      font-weight: 700;
+      background: var(--soft);
+      color: var(--accent);
+    }
+    .green {
+      background: var(--green);
+      color: var(--good);
+    }
+    .amber {
+      background: var(--amber);
+      color: var(--warn);
+    }
+    .facts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      padding: 12px 18px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .facts strong {
+      color: var(--ink);
+    }
+    .empty {
+      padding: 24px 18px;
+      color: var(--muted);
+    }
+    .empty strong {
+      display: block;
+      color: var(--ink);
+    }
+    .schedule .section-head {
+      background: var(--soft);
+    }
+    .time-row {
+      display: grid;
+      grid-template-columns: 68px 1fr auto;
+      gap: 15px;
+      align-items: center;
+      padding: 15px 18px;
+      border-bottom: 1px solid var(--line);
+      min-height: 80px;
+    }
+    .time-row time {
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .time-row time small,
+    .time-row h3 + small {
+      display: block;
+      font-weight: 400;
+    }
+    .time-row.featured {
+      box-shadow: inset 4px 0 var(--accent);
+      background: var(--soft);
+    }
+    .time-row h3 {
+      overflow-wrap: anywhere;
+    }
+    .measure {
+      display: grid;
+      gap: 10px;
+    }
+    .measure label {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+    .measure progress {
+      width: 100%;
+      height: 8px;
+      display: block;
+      accent-color: #8756c4;
+    }
+    .measure .axis {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    .feature {
+      background: var(--soft);
+      padding: 18px;
+      border-radius: 12px;
+    }
+    .feature strong {
+      display: block;
+      font-size: 2.35rem;
+      letter-spacing: -0.06em;
+      line-height: 1.15;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--line);
+    }
+    .board > div {
+      min-width: 0;
+      background: var(--paper);
+    }
+    .board h3 {
+      padding: 12px 18px;
+      background: var(--soft);
+    }
+    .tabs {
+      flex-wrap: wrap;
+      margin-bottom: 17px;
+    }
+    .tabs .btn[aria-current] {
+      color: var(--accent);
+      background: var(--soft);
+      border-color: var(--accent);
+    }
+    .registry {
+      overflow: auto;
+    }
+    .registry table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .registry th,
+    .registry td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .registry th {
+      background: var(--soft);
+      font-size: 0.84rem;
+    }
+    .registry td:first-child {
+      overflow-wrap: anywhere;
+    }
+    .registry tr:last-child td {
+      border-bottom: 0;
+    }
+    .table-scroll {
+      max-height: 340px;
+      overflow: auto;
+    }
+    .table-scroll th {
+      position: sticky;
+      top: 0;
+    }
+    .search {
+      width: min(100%, 270px);
+    }
+    .map-area {
+      display: grid;
+      place-items: center;
+      position: relative;
+      background: var(--soft);
+      padding: 10px 12px;
+      min-height: 260px;
+    }
+    .map-area svg {
+      display: block;
+      width: min(100%, 490px);
+      height: 250px;
+    }
+    .map-area path {
+      fill: var(--line);
+      stroke: var(--paper);
+      stroke-width: 2;
+      filter: blur(0.9px);
+    }
+    .map-area path.highlight {
+      fill: #a47bd7;
+      stroke: #623e91;
+      filter: none;
+    }
+    .map-area circle {
+      fill: #632f9d;
+      stroke: white;
+      stroke-width: 3;
+    }
+    .map-area text {
+      fill: var(--ink);
+      font-weight: 700;
+      font-size: 24px;
+    }
+    .address {
+      border-top: 1px solid var(--line);
+      padding: 12px 18px;
+    }
+    .institution-grid {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      align-items: stretch;
+    }
+    .institution-grid > .panel {
+      display: flex;
+      flex-direction: column;
+    }
+    .map-area {
+      flex: 1;
+    }
+    dialog {
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      width: min(550px, calc(100% - 24px));
+      max-height: calc(100dvh - 30px);
+      padding: 0;
+    }
+    dialog::backdrop {
+      background: #22132b83;
+    }
+    dialog form label {
+      display: grid;
+      gap: 6px;
+      font-weight: 700;
+    }
+    dialog textarea {
+      width: 100%;
+      min-height: 110px;
+      resize: vertical;
+    }
+    .message {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .toast {
+      color: var(--good);
+      font-weight: 700;
+      padding: 6px 0;
+    }
+    .toast:empty {
+      display: none;
+    }
+    @media (max-width: 1080px) {
+      .frame {
+        grid-template-columns: 180px minmax(0, 1fr);
+      }
+      .top {
+        position: relative;
+      }
+      .period {
+        white-space: normal;
+      }
+      main {
+        padding-inline: 24px;
+      }
+      .grid {
+        gap: 12px;
+      }
+      .section-head,
+      .body,
+      .row {
+        padding-inline: 13px;
+      }
+    }
+    @media (max-width: 810px) {
+      .frame {
+        display: block;
+      }
+      aside {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 8px 12px;
+      }
+      .role-name {
+        display: none;
+      }
+      .nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px;
+      }
+      .nav button {
+        font-size: 0.88rem;
+      }
+      .grid,
+      .pair,
+      .institution-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .span {
+        grid-column: auto;
+      }
+      .top {
+        flex-wrap: wrap;
+      }
+      .tools {
+        justify-content: flex-start;
+      }
+      .tools select {
+        max-width: min(300px, 100%);
+      }
+      main {
+        padding-inline: 15px;
+      }
+      .board {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .board > div {
+        display: grid;
+        align-content: start;
+      }
+      .map-area {
+        min-height: 220px;
+      }
+      .map-area svg {
+        height: 220px;
+      }
+    }
+    .map-area svg {
+      height: clamp(220px, 26vw, 320px);
+    }
+    @media (max-width: 420px) {
+      .tools select {
+        max-width: 100%;
+        flex: 1 1 100%;
+      }
+      .period {
+        order: 2;
+      }
+      .time-row {
+        grid-template-columns: 55px minmax(0, 1fr);
+        gap: 8px;
+        padding-inline: 13px;
+      }
+      .time-row > .btn {
+        grid-column: 2;
+        justify-self: start;
+      }
+      .row {
+        flex-wrap: wrap;
+      }
+      .registry th,
+      .registry td {
+        padding: 8px 7px;
+        font-size: 0.82rem;
+      }
+      .registry .btn {
+        padding-inline: 6px;
+      }
+      .registry .status {
+        white-space: normal;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="dashboard.css" />
+  <link rel="stylesheet" href="features.css" />
+  <a class="skip" href="#main">Asosiy mazmunga o‘tish</a>
+  <header class="top">
+    <div class="brand-area">
+      <div class="brand">
+        <img
+          src="assets/mo-logo-compact.png"
+          width="38"
+          height="38"
+          alt=""
+        /><span>AIS HKTB</span>
+      </div>
+      <button
+        id="toggle"
+        class="btn icon"
+        type="button"
+        aria-label="Yon menyu"
+        aria-controls="rail"
+        aria-expanded="true"
+      >
+        <span class="glyph" aria-hidden="true">&#xf0c9;</span>
+      </button>
+    </div>
+    <button
+      class="btn global-search"
+      type="button"
+      data-action="search"
+      aria-label="Bo‘limni qidirish"
+    >
+      <span class="glyph" aria-hidden="true">&#xf002;</span
+      ><span>Bo‘limni qidirish</span>
+    </button>
+    <div class="tools">
+      <button
+        type="button"
+        class="period"
+        data-action="period"
+        aria-label="O‘quv davrini tanlash"
+      >
+        <span class="glyph" aria-hidden="true">&#xf133;</span
+        ><span id="period-label">2026 / 2027</span
+        ><span class="semester" id="period-semester">Kuzgi semestr</span
+        ><span aria-hidden="true">⌄</span>
+      </button>
+      <details class="languages">
+        <summary id="language"></summary>
+        <div class="options" id="languages"></div>
+      </details>
+      <button
+        class="btn icon"
+        type="button"
+        data-action="shortcuts"
+        aria-label="Tezkor amallar"
+      >
+        <span class="glyph" aria-hidden="true">&#xf0fe;</span>
+      </button>
+      <button
+        class="btn icon"
+        id="theme"
+        type="button"
+        aria-label="Tungi rejim"
+        aria-pressed="false"
+      >
+        <span class="glyph" aria-hidden="true">&#xf186;</span>
+      </button>
+      <button
+        class="btn icon"
+        id="inbox"
+        type="button"
+        aria-label="Bildirishnomalar"
+        hidden
+      >
+        <span class="glyph" aria-hidden="true">&#xf0f3;</span
+        ><span id="unread"></span>
+      </button>
+      <button
+        class="btn icon"
+        type="button"
+        data-action="messages"
+        aria-label="Xabarlar"
+      >
+        <span class="glyph" aria-hidden="true">&#xf0e0;</span>
+      </button>
+      <button
+        class="btn icon"
+        type="button"
+        data-action="sections"
+        aria-label="Bo‘limlar"
+      >
+        <span class="glyph" aria-hidden="true">&#xf009;</span>
+      </button>
+      <button
+        class="btn icon"
+        type="button"
+        data-action="profile"
+        aria-label="Profil"
+      >
+        <span class="glyph" aria-hidden="true">&#xf2bd;</span>
+      </button>
+      <details class="role-picker">
+        <summary class="btn icon" aria-label="Maketdagi rolni tanlash">
+          <span class="glyph" aria-hidden="true">&#xf007;</span>
+        </summary>
+        <label class="role-switch"
+          >Rol<select id="role" aria-label="Maketdagi rol"></select
+        ></label>
+      </details>
+    </div>
+  </header>
+  <div class="frame" id="frame">
+    <aside id="rail">
+      <div class="rail-context">
+        <span class="glyph rail-emblem" aria-hidden="true">&#xf1ad;</span>
+        <div>
+          <strong id="rail-org">AIS HKTB</strong>
+          <p id="role-name" class="role-name"></p>
+        </div>
+      </div>
+      <nav class="nav" id="nav" aria-label="Rol menyusi"></nav>
+      <button type="button" class="rail-account btn" data-action="role-picker">
+        <span class="glyph" aria-hidden="true">&#xf007;</span
+        ><span
+          ><strong id="rail-account-name"></strong
+          ><small>Rolni almashtirish</small></span
+        ><span aria-hidden="true">⌄</span>
+      </button>
+    </aside>
+    <main id="main" tabindex="-1">
+      <div class="titlebar" id="title"></div>
+      <p class="crumb" id="scope"></p>
+      <p class="toast" id="feedback" role="status"></p>
+      <div id="workspace"></div>
+      <p class="notice">Dashboard maketi · namunaviy ma’lumotlar</p>
+    </main>
+  </div>
+  <dialog id="dialog" aria-labelledby="dialog-title">
+    <div class="section-head">
+      <h2 id="dialog-title"></h2>
+      <form method="dialog">
+        <button class="btn" type="submit">Yopish</button>
+      </form>
+    </div>
+    <div class="body" id="dialog-body"></div>
+  </dialog>
+  <script src="assets/js/prototype-uzbekistan-map.js"></script>
+  <button
+    type="button"
+    class="settings-toggle"
+    data-action="settings"
+    aria-label="Dizayn sozlamalari"
+  >
+    <span class="glyph" aria-hidden="true">&#xf013;</span>
+  </button>
+  <script src="dashboard.js"></script>
+  <script src="modules.js"></script>
+  <script src="dashboard-sections.js"></script>
+  <script src="translations.js"></script>
+  <script src="app-features.js"></script>
 </html>
