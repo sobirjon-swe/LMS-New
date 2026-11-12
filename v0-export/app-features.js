@@ -110,8 +110,15 @@ function goModule(id) {
 function closeHeaderPanels() {
   document.querySelectorAll(".top details").forEach((d) => (d.open = false));
 }
+let dashboardRange = "semester";
 render = function () {
   originalRender();
+  document.body.dataset.role = state.role;
+  if (state.role === "institution" && state.page === 0 && !state.module && !state.institution) {
+    $("#title > .btn")?.remove();
+    $("#title").insertAdjacentHTML("beforeend", `<div class="dashboard-actions">${quickAction("calendar", demo.year, "period", "")}<label class="dashboard-range"><span class="sr-only">Hisobot davri</span>${selectInput("report-range", [["semester", "Shu semestr"], ["month", "Shu oy"], ["previous", "Oldingi oy"]], dashboardRange, 'id="dashboard-range"')}</label>${quickAction("download", "Eksport", "dashboard-export", "")}${quickAction("refresh", "", "dashboard-refresh", "", "icon").replace("data-action", 'aria-label="Dashboardni yangilash" data-action')}${quickAction("plus", "Tezkor qo‘shish", "shortcuts", "", "primary")}</div>`);
+    if (dashboardRange === "previous") workspace.innerHTML = panel("Oktabr 2026", empty("Bu davrda demo qaydlar yo‘q", "Mavjud sintetik hisobot 11-noyabr 2026 sanasiga tegishli. Shu oy yoki shu semestrni tanlang."));
+  }
   $("#nav").insertAdjacentHTML(
     "beforeend",
     allowedModules().length
@@ -165,7 +172,7 @@ render = function () {
           : empty("Hali ishlar yo‘q", "Yuqoridagi formadan foydalaning."),
         "module-panel",
       );
-  } else if (state.page === 0 && !state.institution)
+  } else if (state.page === 0 && !state.institution && !(state.role === "institution" && dashboardRange === "previous"))
     workspace.insertAdjacentHTML(
       "beforeend",
       `<div class="dashboard-lower">${dashboardSections()}</div>`,
@@ -226,6 +233,7 @@ render = function () {
 show = function (title, html) {
   modal.className = "";
   modal.style.removeProperty("--popup-right");
+  modal.style.removeProperty("--popup-top");
   originalShow(title, html);
   translateUI(modal);
   requestAnimationFrame(() => {
@@ -240,11 +248,10 @@ function showHeader(title, html, launcher) {
   show(title, html);
   modal.classList.add("header-popup");
   const rect = launcher?.getBoundingClientRect();
-  if (rect)
-    modal.style.setProperty(
-      "--popup-right",
-      `${Math.max(12, innerWidth - rect.right)}px`,
-    );
+  if (rect) {
+    modal.style.setProperty("--popup-right", `${Math.max(12, innerWidth - rect.right)}px`);
+    modal.style.setProperty("--popup-top", `${Math.min(rect.bottom + 6, innerHeight - 180)}px`);
+  }
 }
 function showSettings() {
   show(
@@ -408,6 +415,27 @@ function openModuleSearch() {
   );
 }
 function handleFeatureAction(action, value, control) {
+  if (action === "dashboard-refresh") {
+    render();
+    notify("Dashboard mahalliy demo ma’lumotlari bilan yangilandi");
+    document.querySelector('[data-action="dashboard-refresh"]')?.focus();
+    return true;
+  }
+  if (action === "dashboard-export") {
+    const cells = [...workspace.querySelectorAll(".admin-intro .stat-card")].map(card => [card.querySelector("small").textContent, card.querySelector("strong").textContent]);
+    const quote = value => `"${String(value).replace(/^[=+@-]/, match => "'" + match).replaceAll('"', '""')}"`;
+    const data = [["AIS HKTB", "Sintetik demo hisobot"], ["Hisobot sanasi", "2026-11-11"], ["O‘quv yili", demo.year], ["Davr", dashboardRange === "previous" ? "Oktabr 2026 — qayd yo‘q" : dashboardRange === "month" ? "Noyabr 2026" : demo.semester], ["Ko‘rsatkich", "Qiymat"], ...cells].map(row => row.map(quote).join(",")).join("\r\n");
+    const url = URL.createObjectURL(new Blob(["\ufeff", data], { type: "text/csv;charset=utf-8" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "AIS-HKTB-demo-hisobot.csv";
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    notify("Ko‘rsatilgan demo ko‘rsatkichlar CSV fayliga eksport qilindi");
+    return true;
+  }
   if (action === "module") {
     goModule(value);
     return true;
@@ -749,6 +777,11 @@ roleSelect.addEventListener("change", () => {
 document.addEventListener("change", (e) => {
   const id = e.target.id,
     v = e.target.value;
+  if (id === "dashboard-range" && ["semester", "month", "previous"].includes(v)) {
+    dashboardRange = v;
+    render();
+    $("#dashboard-range")?.focus();
+  }
   if (id === "module-date" && /^\d{4}-\d{2}-\d{2}$/.test(v)) {
     moduleState.date = v;
     render();

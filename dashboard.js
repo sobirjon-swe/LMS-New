@@ -348,6 +348,9 @@ const iconCodes = {
   pin: "f3c5",
   moon: "f186",
   sun: "f185",
+  download: "f019",
+  refresh: "f021",
+  plus: "f055",
 };
 const glyph = (name) =>
   `<span class="glyph" aria-hidden="true">&#x${iconCodes[name] ?? iconCodes.home};</span>`;
@@ -430,8 +433,8 @@ function teacherPerformance() {
     <div class="teacher-indicator"><span class="stat-icon ${color}">${glyph(icon)}</span><strong>${value}%</strong><small>${label}</small><progress value="${value}" max="100" aria-label="${label}"></progress></div>`,
       )
       .join("")}</div>`,
-    "",
-    "",
+    "teacher-performance",
+    button("Natijalar", "results"),
     "chart",
   );
 }
@@ -503,15 +506,18 @@ function personalWelcome(learner) {
       if (item[0] === "Davomat qaydi kerak")
         item[1] = attendanceDraft.has("0:09:00") ? "0" : "1";
     }
-  return `<div class="overview">
-    <section class="welcome"><div class="welcome-head"><div class="welcome-person"><span class="avatar-symbol">${glyph(learner ? "book" : "person")}</span><div><small>AKT · ${learner ? "Kursant" : "Pedagog"}</small><h2>${learner ? "Lokal test kursanti" : "Namunaviy o‘qituvchi"}</h2><div class="hero-facts">${pill(learner ? "AT-3/3-26" : "Raqamli texnologiyalar kafedrasi")}${pill(learner ? "3-kurs" : `${teacherGroups.length} ta biriktirilgan guruh`)}${pill("Kuzgi semestr")}</div></div></div><p class="welcome-date"><strong>11-noyabr</strong>Chorshanba, 2026</p></div>
+  return `<div class="overview ${learner ? "learner-overview" : "teacher-overview"}">
+    <section class="welcome"><div class="welcome-head"><div class="welcome-person"><span class="avatar-symbol">${glyph(learner ? "book" : "person")}</span><div><small>AKT · ${learner ? "Kursant" : "Pedagog"}</small><h2>${learner ? "Lokal test kursanti" : "Namunaviy o‘qituvchi"}</h2><div class="hero-facts">${pill(learner ? "AT-3/3-26" : "Raqamli texnologiyalar kafedrasi")}${pill(learner ? "3-kurs" : `${teacherGroups.length} ta biriktirilgan guruh`)}${pill("Kuzgi semestr")}</div>${learner ? `<div class="learner-profile-tags"><span>${glyph("check")} 4 / 5 darsda qatnashgan</span><span>${glyph("chart")} ${subjectResults.length} ta e’lon qilingan baho</span><span>${glyph("book")} Shaxsiy o‘quv rejasi</span></div>` : ""}</div></div><p class="welcome-date"><strong>11-noyabr</strong>Chorshanba, 2026</p></div>
     ${stats(summary, "hero-strip")}
     <div class="quick"><span class="label">Tezkor amallar</span>${
       learner
         ? quickAction("calendar", "Jadvalni ochish", "menu", 1, "primary") +
           quickAction("task", "Topshiriqlar", "menu", 4) +
           quickAction("chart", "Natijalarim", "menu", 2) +
-          quickAction("check", "Davomatim", "menu", 3)
+          quickAction("check", "Davomatim", "menu", 3) +
+          quickAction("book", "Kutubxona", "library", "") +
+          quickAction("mail", "Pedagogga xabar", "send-message", "") +
+          quickAction("calendar", "Ruxsat so‘rash", "request-leave", "")
         : quickAction(
             "check",
             "Davomatni qayd etish",
@@ -592,7 +598,7 @@ function schedule(learner) {
     ? lessons
         .map(
           ([start, end, title, meta, status]) => `
-    <div class="time-row ${status === "Joriy dars" ? "current" : status === "Navbatdagi dars" ? "featured" : status === "O‘tildi" ? "done" : "planned"}"><time datetime="${start}">${start}<small>${end}</small></time><div class="lesson-info"><h3>${esc(title)}</h3><small>${glyph("group")} ${esc(meta)} · 80 daqiqa</small></div><div class="lesson-actions">${pill(status, status === "O‘tildi" ? "green" : status === "Joriy dars" ? "rose" : status === "Navbatdagi dars" ? "amber" : "")}${learner || state.role !== "teacher" ? detailButton("Tafsilot", title, `${start}–${end} · ${meta} · ${status}`) : button(status === "O‘tildi" ? "Jurnal" : "Darsni ochish", "journal", start, status === "Joriy dars" ? "primary" : "")}</div></div>`,
+    <div class="time-row ${status === "Joriy dars" ? "current" : status === "Navbatdagi dars" ? "featured" : status === "O‘tildi" ? "done" : "planned"}"><time datetime="${start}">${start}<small>${Number(end.slice(0, 2)) * 60 + Number(end.slice(3)) - Number(start.slice(0, 2)) * 60 - Number(start.slice(3))} daqiqa</small></time><div class="lesson-info"><h3>${esc(title)}</h3><small>${glyph("group")} ${esc(meta)}</small></div><div class="lesson-actions">${pill(status, status === "O‘tildi" ? "green" : status === "Joriy dars" ? "rose" : status === "Navbatdagi dars" ? "amber" : "")}${learner || state.role !== "teacher" ? detailButton("Tafsilot", title, `${start}–${end} · ${meta} · ${status}`) : button(status === "O‘tildi" ? "Jurnal" : "Darsni ochish", "journal", start, status === "Joriy dars" ? "primary" : "")}</div></div>`,
         )
         .join("")
     : empty("Bu kunga dars rejalashtirilmagan", "Boshqa kunni tanlang.");
@@ -625,10 +631,11 @@ function schedule(learner) {
           .join("")}</div>`
       : "";
   return panel(
-    "Dars jadvali",
-    `<div class="facts"><strong>${esc(day.date)}</strong><span>${lessons.length} ta dars</span></div>${progress}<div class="schedule-list">${body}</div>`,
+    state.page === 0 ? "Bugungi darslar" : "Dars jadvali",
+    `${progress}<div class="schedule-list">${body}</div>`,
     "schedule",
-    dates,
+    `<div class="schedule-heading-tools"><span class="schedule-context">${esc(day.date)} · ${lessons.length} ta dars</span>${dates}</div>`,
+
     "calendar",
   );
 }
@@ -663,24 +670,36 @@ function personal(learner, page) {
     panel(
       title,
       `<div class="body"><div class="insight-lead"><span class="dial" style="--value:${value}"><b>${value}</b></span><div><h3>${caption}</h3><small>${meta}</small></div></div><div class="insight-details">${details}</div></div>`,
-      "insights",
+      `insights ${learner ? "learner-insights" : "teacher-insights"}`,
       pill("DEMO TAHLIL"),
       "chart",
     );
+  const insightRows = (items) => `<div class="insight-summary">${items.map(([icon, title, text, color = ""]) => `<div class="insight-summary-row"><span class="stat-icon ${color}">${glyph(icon)}</span><div><h3>${esc(title)}</h3><small>${esc(text)}</small></div></div>`).join("")}</div>`;
+  const best = [...subjectResults].sort((a, b) => parseInt(b[1]) - parseInt(a[1]));
   const right = learner
     ? analysis(
         "O‘quv natijasi",
         averageResult(),
         "E’lon qilingan natijalar",
         `${subjectResults.length} ta sintetik baho · o‘rtacha ${averageResult()} / 100`,
-        rows(learnerTasks),
+        insightRows([
+          ["check", "Shaxsiy davomat · 80%", "5 ta qayddan 4 tasida qatnashgan", "green"],
+          ["chart", `Eng yuqori natija · ${best[0]?.[1] || "—"}`, best[0]?.[0] || "Baho e’lon qilinmagan", "violet"],
+          ["book", "E’tibor talab qiladigan fan", best.at(-1)?.[0] || "Baho e’lon qilinmagan", "amber"],
+          ["task", "Yaqin topshiriq muddati", "Lokal test topshirig‘i · 18-noyabr", "rose"],
+        ]) + `<div class="insight-footer">${button("Natijalarimni ko‘rish", "results")}</div>`,
       )
     : analysis(
         "Guruhlar davomati",
         90,
         "30 ta davomat qaydi",
         "27 ta qatnashgan · 3 ta qatnashmagan",
-        pending + rows(teacherTasks.slice(1)),
+        insightRows([
+          ["group", `${teacherGroups.length} ta guruh · ${teacherGroups.reduce((sum, g) => sum + g.count, 0)} kursant`, "Biriktirilgan guruhlar ro‘yxati bo‘yicha", "cyan"],
+          ["check", "Eng yuqori davomat · 93%", "AT-3/4-26 · Amaliy mashg‘ulot", "green"],
+          ["chart", "Eng yuqori o‘rtacha baho · 86 / 100", "AT-3/5-26 · Ma’lumotlar bazasi", "violet"],
+          ["task", "3 ta ishni tekshirish kerak", "Lokal test fani · Topshirilgan ishlar", "amber"],
+        ]) + `<div class="insight-footer">${pending}</div>`,
       );
   const daily = grid(schedule(learner), right, "schedule-side");
   return (
@@ -931,8 +950,8 @@ function institutionAdmin(page) {
       ["Pedagoglar", "113", "person", "amber"],
       ["O‘quv guruhlari", "33", "book", "violet"],
     ])}</section>`;
-  const highlights = `<div class="stack"><article class="highlight-card"><div><small>${glyph("check")} Muassasa tayyorgarligi</small><h2>5 / 7 manba tayyor</h2><small>Joriy semestr bo‘yicha</small></div>${button("Manbalarni ochish", "menu", 1)}</article>
-    <article class="highlight-card blue"><div><small>${glyph("task")} O‘quv jarayoni</small><h2>Biriktirish vazifalari</h2><small>Fan va pedagog biriktiruvlari</small></div>${button("Vazifalarni ochish", "menu", 2)}</article></div>`;
+  const highlights = `<div class="stack"><article class="highlight-card"><div><small>${glyph("check")} Muassasa tayyorgarligi</small><h2>5 / 7 manba tayyor</h2><small>Joriy semestr bo‘yicha</small></div><div class="highlight-footer"><div class="highlight-numbers"><span><strong>5</strong><small>Tayyor</small></span><span><strong>2</strong><small>Kutilmoqda</small></span></div>${button("Manbalarni ochish", "menu", 1)}</div></article>
+    <article class="highlight-card blue"><div><small>${glyph("task")} O‘quv jarayoni</small><h2>Biriktirish vazifalari</h2><small>Fan va pedagog biriktiruvlari</small></div><div class="highlight-footer"><div class="highlight-numbers"><span><strong>31 / 33</strong><small>Fanlar</small></span><span><strong>32 / 33</strong><small>Pedagoglar</small></span></div>${button("Vazifalarni ochish", "menu", 2)}</div></article></div>`;
   const distribution = panel(
     "Kurslar bo‘yicha taqsimot",
     `<div class="body"><h3>247 kursant</h3><small>33 ta o‘quv guruhi</small></div>${bars(
@@ -942,7 +961,7 @@ function institutionAdmin(page) {
         ["5-kurs · 84 kursant", 34],
       ],
       "%",
-    )}`,
+    )}<div class="distribution-summary"><div><strong>33</strong><small>O‘quv guruhi</small></div><div><strong>3</strong><small>Ko‘rsatilgan kurs</small></div></div>`,
     "",
     "",
     "group",

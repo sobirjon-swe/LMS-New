@@ -166,13 +166,18 @@ function attendanceCenter(learner) {
   );
 }
 function studentResults() {
-  return grid(
-    panel(
-      "Fanlar bo‘yicha natijalar",
-      `<div class="body subject-cards">${subjectResults.map(([name, score]) => `<article><span class="stat-icon">${glyph("book")}</span><h3>${name}</h3><strong>${score}</strong>${pill("E’lon qilingan", "green")}<progress value="${parseInt(score)}" max="100" aria-label="${name}"></progress></article>`).join("")}</div>`,
-    ),
-    verticalChart("O‘sish dinamikasi", ["Sent.", "Okt.", "Noy."], [74, 78, 82]),
-    "pair",
+  const sorted = [...subjectResults].sort((a, b) => parseInt(b[1]) - parseInt(a[1]));
+  const passed = subjectResults.filter(row => parseInt(row[1]) >= 60).length;
+  return panel(
+    "Fanlar bo‘yicha natijalar",
+    `<div class="body academic-results">
+      <section class="academic-summary" aria-label="Umumiy o‘quv natijasi"><span class="dial" style="--value:${averageResult()}"><b>${averageResult()}</b></span><strong>O‘rtacha natija / 100</strong><small>E’lon qilingan demo baholar</small><div class="academic-summary-stats"><div><b>${subjectResults.length}</b><small>Baholangan fan</small></div><div><b>${passed} / ${subjectResults.length}</b><small>60 balldan yuqori</small></div><div><b>80%</b><small>Davomat</small></div><div><b>3-kurs</b><small>AT-3/3-26</small></div></div><p class="muted">Baholanmagan fanlar o‘rtacha natijaga kiritilmaydi.</p></section>
+      <div class="academic-subjects"><small class="academic-eyebrow">${glyph("book")} FANLAR KESIMIDA</small>${subjectResults.map(([name, score, status], i) => `<article class="subject-result ${i % 2 ? "blue" : "green"}"><span class="stat-icon">${glyph("book")}</span><div><div class="subject-result-title"><h3>${esc(name)}</h3><strong>${esc(score)}</strong></div><progress value="${parseInt(score)}" max="100" aria-label="${esc(name)}: ${esc(score)}"></progress><small>${esc(status)}</small></div></article>`).join("")}<div class="subject-highlights"><div><small>ENG YUQORI NATIJA</small><strong>${esc(sorted[0]?.[0] || "—")}</strong></div><div><small>TAKRORLASH UCHUN</small><strong>${esc(sorted.at(-1)?.[0] || "—")}</strong></div></div><div class="study-note">${glyph("task")} O‘quv tavsiyasi: ${esc(sorted.at(-1)?.[0] || "fanlar")} bo‘yicha mustaqil ishni takrorlang.</div></div>
+      <div class="academic-trend"><small class="academic-eyebrow">${glyph("chart")} O‘SISH DINAMIKASI</small><div class="trend-current"><strong>${averageResult()}<small> / 100</small></strong><span>Noyabr · demo natija</span></div><div class="result-columns" role="img" aria-label="Demo oylik natijalar: sentabr 74, oktabr 78, noyabr ${averageResult()}">${[["Sent.",74],["Okt.",78],["Noy.",averageResult()]].map(([label, score]) => `<div><b>${score}</b><i style="height:${score}px"></i><small>${label}</small></div>`).join("")}</div><div class="study-note green">${glyph("chart")} Sentabrdan +${averageResult() - 74} ball</div><small class="muted">Sintetik oylik ko‘rsatkichlar</small></div>
+    </div>`,
+    "student-performance",
+    button("To‘liq natijalar", "results"),
+    "chart",
   );
 }
 function dashboardSections() {
