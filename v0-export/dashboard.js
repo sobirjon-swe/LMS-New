@@ -592,7 +592,7 @@ function schedule(learner) {
     ? lessons
         .map(
           ([start, end, title, meta, status]) => `
-    <div class="time-row ${status === "Joriy dars" ? "current" : status === "Navbatdagi dars" ? "featured" : status === "O‘tildi" ? "done" : "planned"}"><time datetime="${start}">${start}<small>${end}</small></time><div><h3>${esc(title)}</h3><small>${esc(meta)} · 80 daqiqa · ${esc(status)}</small></div>${learner || state.role !== "teacher" ? detailButton("Dars tafsiloti", title, `${start}–${end} · ${meta} · ${status}`) : button(status === "O‘tildi" ? "Jurnal" : "Darsni ochish", "journal", start, status === "Navbatdagi dars" ? "primary" : "")}</div>`,
+    <div class="time-row ${status === "Joriy dars" ? "current" : status === "Navbatdagi dars" ? "featured" : status === "O‘tildi" ? "done" : "planned"}"><time datetime="${start}">${start}<small>${end}</small></time><div class="lesson-info"><h3>${esc(title)}</h3><small>${glyph("group")} ${esc(meta)} · 80 daqiqa</small></div><div class="lesson-actions">${pill(status, status === "O‘tildi" ? "green" : status === "Joriy dars" ? "rose" : status === "Navbatdagi dars" ? "amber" : "")}${learner || state.role !== "teacher" ? detailButton("Tafsilot", title, `${start}–${end} · ${meta} · ${status}`) : button(status === "O‘tildi" ? "Jurnal" : "Darsni ochish", "journal", start, status === "Joriy dars" ? "primary" : "")}</div></div>`,
         )
         .join("")
     : empty("Bu kunga dars rejalashtirilmagan", "Boshqa kunni tanlang.");
@@ -659,42 +659,28 @@ function personal(learner, page) {
       "Joriy semestr davomati",
       `<div class="body">${metric("Davomat", "80%", "4 ta qatnashgan · 5 ta qayd")}</div>`,
     );
-  const analysis = (title, value, caption, meta) =>
+  const analysis = (title, value, caption, meta, details) =>
     panel(
       title,
-      `<div class="body"><div class="insight-lead"><span class="dial" style="--value:${value}"><b>${value}</b></span><div><h3>${caption}</h3><small>${meta}</small></div></div></div>`,
+      `<div class="body"><div class="insight-lead"><span class="dial" style="--value:${value}"><b>${value}</b></span><div><h3>${caption}</h3><small>${meta}</small></div></div><div class="insight-details">${details}</div></div>`,
       "insights",
-      "",
+      pill("DEMO TAHLIL"),
       "chart",
     );
   const right = learner
-    ? stack(
-        analysis(
-          "O‘quv natijasi",
-          averageResult(),
-          "E’lon qilingan natijalar",
-          `${subjectResults.length} ta sintetik baho · o‘rtacha ${averageResult()} / 100`,
-        ),
-        panel("Yaqin muddat", rows(learnerTasks)),
+    ? analysis(
+        "O‘quv natijasi",
+        averageResult(),
+        "E’lon qilingan natijalar",
+        `${subjectResults.length} ta sintetik baho · o‘rtacha ${averageResult()} / 100`,
+        rows(learnerTasks),
       )
-    : stack(
-        analysis(
-          "Guruhlar davomati",
-          90,
-          "30 ta davomat qaydi",
-          "27 ta qatnashgan · 3 ta qatnashmagan",
-        ),
-        panel("Bajariladigan ishlar", pending + rows(teacherTasks.slice(1))),
-        panel(
-          "Guruhlar bo‘yicha",
-          bars(
-            [
-              ["AT-3/3-26", 87],
-              ["AT-3/4-26", 93],
-            ],
-            "%",
-          ),
-        ),
+    : analysis(
+        "Guruhlar davomati",
+        90,
+        "30 ta davomat qaydi",
+        "27 ta qatnashgan · 3 ta qatnashmagan",
+        pending + rows(teacherTasks.slice(1)),
       );
   const daily = grid(schedule(learner), right, "schedule-side");
   return (
@@ -1438,14 +1424,36 @@ $("#theme").addEventListener("click", (event) => {
   );
   event.currentTarget.innerHTML = glyph(night ? "sun" : "moon");
 });
-$("#toggle").addEventListener("click", (event) => {
-  const folded = $("#frame").classList.toggle("folded");
-  event.currentTarget.setAttribute("aria-expanded", String(!folded));
+const mobileNavigation = matchMedia("(max-width:767px)");
+const headerObserver = new ResizeObserver(([entry]) => {
+  document.documentElement.style.setProperty(
+    "--header-height",
+    `${entry.target.getBoundingClientRect().height}px`,
+  );
 });
-if (matchMedia("(max-width:850px)").matches) {
-  $("#frame").classList.add("folded");
-  $("#toggle").setAttribute("aria-expanded", "false");
+headerObserver.observe($(".top"));
+function setSidebarOpen(open, restoreFocus = false) {
+  $("#frame").classList.toggle("folded", !open);
+  $("#toggle").setAttribute("aria-expanded", String(open));
+  $("#main").inert = mobileNavigation.matches && open;
+  if (restoreFocus) $("#toggle").focus();
 }
+$("#toggle").addEventListener("click", () => {
+  const open = $("#frame").classList.contains("folded");
+  setSidebarOpen(open);
+  if (open && mobileNavigation.matches) $("#nav button")?.focus();
+});
+$(".rail-backdrop").addEventListener("click", () => setSidebarOpen(false, true));
+$("#nav").addEventListener("click", (event) => {
+  if (mobileNavigation.matches && event.target.closest("button"))
+    setSidebarOpen(false, true);
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && mobileNavigation.matches && !modal.open)
+    setSidebarOpen(false, true);
+});
+mobileNavigation.addEventListener("change", () => setSidebarOpen(!mobileNavigation.matches));
+setSidebarOpen(!mobileNavigation.matches);
 $("#inbox").addEventListener("click", showInbox);
 document.addEventListener("input", (event) => {
   if (event.target.id === "menu-search") {

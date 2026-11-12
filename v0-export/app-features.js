@@ -105,10 +105,7 @@ function goModule(id) {
   closeHeaderPanels();
   render();
   $(".titlebar h1").focus();
-  if (matchMedia("(max-width:850px)").matches) {
-    $("#frame").classList.add("folded");
-    $("#toggle").setAttribute("aria-expanded", "false");
-  }
+  if (mobileNavigation.matches) setSidebarOpen(false);
 }
 function closeHeaderPanels() {
   document.querySelectorAll(".top details").forEach((d) => (d.open = false));
