@@ -67,6 +67,7 @@ function notificationPanel() {
   );
 }
 function taskPanel(learner) {
+  if (!learner && typeof teacherTaskPanel === "function") return teacherTaskPanel();
   const tasks = learner
     ? [
         ["Mustaqil ish", "Axborot tizimlari · 18-noyabrgacha", "Topshirish"],
@@ -183,28 +184,7 @@ function studentResults() {
   );
 }
 function dashboardSections() {
-  if (state.role === "teacher")
-    return stack(
-      grid(taskPanel(false), examsPanel(), "schedule-side"),
-      grid(attendanceCenter(false), communicationPanel(), "pair"),
-      grid(
-        panel(
-          "Kursantlar natijalari",
-          rows([
-            ["Lokal test kursanti", "AT-3/3-26 · 86 / 100", "Tafsilot"],
-            ["Namunaviy kursant A", "AT-3/4-26 · 78 / 100", "Tafsilot"],
-            [
-              "Namunaviy kursant B",
-              "AT-3/5-26 · Baholar e’lon qilinmagan",
-              "Tafsilot",
-            ],
-          ]),
-        ),
-        achievementsPanel(),
-        "pair",
-      ),
-      `<div class="three-columns">${miniCalendar()}${activityPanel()}${notificationPanel()}</div>`,
-    );
+  if (state.role === "teacher") return teacherSections();
   if (state.role === "learner")
     return stack(
       studentResults(),

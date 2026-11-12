@@ -104,7 +104,8 @@ function goModule(id) {
   if (modal.open) modal.close();
   closeHeaderPanels();
   render();
-  $(".titlebar h1").focus();
+  $(".titlebar h1").focus({ preventScroll: true });
+  window.scrollTo({ top: 0, behavior: "instant" });
   if (mobileNavigation.matches) setSidebarOpen(false);
 }
 function closeHeaderPanels() {
@@ -189,7 +190,7 @@ render = function () {
       ? messages.filter((m) => m.unread).length
       : state.role === "institution"
         ? messages.filter((m) => m.replies.length).length
-        : 2;
+        : state.role === "teacher" ? teacherNotices.filter(n => teacherIsUnread(n, "teacherReadNotices")).length : 2;
   $("#unread").textContent = unread || "";
   $("#inbox").setAttribute(
     "aria-label",
@@ -229,6 +230,8 @@ render = function () {
   updateURL();
   persistDemo();
   translateUI();
+  applyAppearance();
+  afterTeacherRender();
 };
 show = function (title, html) {
   modal.className = "";
@@ -254,35 +257,10 @@ function showHeader(title, html, launcher) {
   }
 }
 function showSettings() {
-  show(
-    "Dizayn sozlamalari",
-    `<div class="stack"><p class="muted">Ko‘rinish ushbu brauzer uchun saqlanadi.</p>${field(
-      "Rang rejimi",
-      selectInput(
-        "theme",
-        [
-          ["light", "Kunduzgi"],
-          ["dark", "Tungi"],
-        ],
-        demo.night ? "dark" : "light",
-        'id="design-theme"',
-      ),
-    )}${field(
-      "Zichlik",
-      selectInput(
-        "density",
-        [
-          ["comfortable", "Qulay"],
-          ["compact", "Ixcham"],
-        ],
-        demo.density,
-        'id="design-density"',
-      ),
-    )}<hr><h3>Demo ma’lumotlari</h3><p>Murojaatlar, davomat, formalar va sozlamalarni boshlang‘ich holatga qaytarish.</p>${button("Demo ma’lumotlarini tiklash", "reset-confirm", "", "danger")}</div>`,
-  );
-  modal.classList.add("settings-drawer");
+  openAppearanceSettings();
 }
 function roleQuickActions() {
+  if (state.role === "teacher") return `<div class="teacher-shortcuts">${[["check","Davomat","Bugungi qayd","journal-today","09:00"],["chart","Natijalar","E’lon qilingan baholar","results",""],["task","Topshiriq","Yangi topshiriq","create-task",""],["journal","Dars rejasi","Haftalik jadval","teacher-group-week",teacherGroups[0].code],["book","Materiallar","Kutubxona","library",""],["mail","Xabar","Ichki muloqot","send-message",""],["chart","Hisobot","Guruhlar natijalari","results",""],["calendar","Taqvim","Tadbirlar","module","academic-calendar"],["book","Imtihonlar","Kelgusi nazoratlar","teacher-widget","upcoming-exams"]].map(([icon,title,meta,action,value],i)=>`<button type="button" data-action="${action}" data-value="${esc(value)}"><span class="stat-icon ${['','green','amber','cyan','violet','rose'][i%6]}">${glyph(icon)}</span><strong>${title}</strong><small>${meta}</small></button>`).join('')}</div>`;
   const personalActions =
     state.role === "learner"
       ? [
@@ -307,6 +285,7 @@ function roleQuickActions() {
     .join("")}</div>`;
 }
 function resultsModal() {
+  if (state.role === "teacher") return teacherReports();
   show(
     "Imtihon natijalari",
     simpleTable(["Fan", "Natija", "Holat"], subjectResults) +
@@ -379,6 +358,7 @@ function formModal(kind, title, value = "") {
   );
 }
 function showNotifications(launcher) {
+  if (state.role === "teacher") return show("Bildirishnomalar", teacherNoticeCards());
   const list =
     state.role === "upvk"
       ? messages
@@ -415,6 +395,7 @@ function openModuleSearch() {
   );
 }
 function handleFeatureAction(action, value, control) {
+  if (handleAppearanceAction(action, value) || handleTeacherAction(action, value, control)) return true;
   if (action === "dashboard-refresh") {
     render();
     notify("Dashboard mahalliy demo ma’lumotlari bilan yangilandi");
@@ -695,7 +676,11 @@ document.addEventListener(
       return;
     }
     if (control?.id === "theme") {
+      event.stopImmediatePropagation();
       demo.night = !demo.night;
+      appearance.mode = demo.night ? "dark" : "light";
+      saveAppearance();
+      applyAppearance();
       persistDemo();
       return;
     }

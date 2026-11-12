@@ -108,11 +108,8 @@ function dateKey(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 function dateText(date) {
-  return new Intl.DateTimeFormat("uz-Latn", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(date);
+  const months = ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"];
+  return `${date.getDate()}-${months[date.getMonth()]} ${date.getFullYear()}`;
 }
 function moveModuleDate(amount) {
   const d = parseDate(moduleState.date);

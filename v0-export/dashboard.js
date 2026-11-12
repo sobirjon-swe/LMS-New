@@ -351,6 +351,7 @@ const iconCodes = {
   download: "f019",
   refresh: "f021",
   plus: "f055",
+  bell: "f0f3",
 };
 const glyph = (name) =>
   `<span class="glyph" aria-hidden="true">&#x${iconCodes[name] ?? iconCodes.home};</span>`;
@@ -406,7 +407,7 @@ function teacherGroupCards() {
     <article class="teacher-group">
       <div class="group-head ${group.color}"><span class="stat-icon">${glyph("group")}</span><div><h3>${esc(group.code)}</h3><small>${esc(group.subject)}</small></div></div>
       <div class="group-stats"><div><strong>${group.count}</strong><small>Kursantlar</small></div><div><strong>${group.attendance}%</strong><small>Davomat</small></div><div><strong>${group.marks} / 100</strong><small>O‘rtacha baho</small></div></div>
-      <div class="group-actions">${["Davomat", "Baholar", "Guruh tafsiloti"].map((label) => detailButton(label, `${group.code} · ${label}`, `${group.subject} · ${group.count} kursant · ${group.attendance}% davomat · ${group.marks}/100 o‘rtacha baho`)).join("")}</div>
+      <div class="group-actions">${[["check","Davomat","teacher-group-attendance"],["book","Baholar","teacher-group-grades"],["group","Guruh tafsiloti","teacher-group-detail"],["calendar","Haftalik dars jadvali","teacher-group-week"]].map(([icon,label,action])=>`<button type="button" class="btn group-icon-button" data-action="${action}" data-value="${esc(group.code)}" title="${esc(label)}" aria-label="${esc(group.code)} · ${esc(label)}">${glyph(icon)}</button>`).join("")}</div>
     </article>`,
       )
       .join("")}</div>`,
@@ -447,6 +448,7 @@ const quickAction = (icon, label, action, value, style = "") =>
   );
 
 function personalWelcome(learner) {
+  if (!learner && typeof teacherWelcome === "function") return teacherWelcome();
   const today = days[0].lessons.filter(
     (lesson) => !learner || lesson[3].includes("AT-3/3-26"),
   );
@@ -704,7 +706,7 @@ function personal(learner, page) {
   const daily = grid(schedule(learner), right, "schedule-side");
   return (
     personalWelcome(learner) +
-    (learner ? daily : stack(daily, teacherPerformance(), teacherGroupCards()))
+    (learner ? daily : stack(grid(teacherPerformance(), right, "pair teacher-overview-panels"), teacherGroupCards()))
   );
 }
 

@@ -7,6 +7,9 @@
     "modules.js",
     "dashboard-sections.js",
     "translations.js",
+    "teacher-data.js",
+    "teacher-dashboard.js",
+    "appearance.js",
     "app-features.js",
   ];
   try {
