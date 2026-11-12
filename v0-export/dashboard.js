@@ -951,15 +951,8 @@ function institutionAdmin(page) {
     <article class="highlight-card blue"><div><small>${glyph("task")} O‘quv jarayoni</small><h2>Biriktirish vazifalari</h2><small>Fan va pedagog biriktiruvlari</small></div><div class="highlight-footer"><div class="highlight-numbers"><span><strong>31 / 33</strong><small>Fanlar</small></span><span><strong>32 / 33</strong><small>Pedagoglar</small></span></div>${button("Vazifalarni ochish", "menu", 2)}</div></article></div>`;
   const distribution = panel(
     "Kurslar bo‘yicha taqsimot",
-    `<div class="body"><h3>247 kursant</h3><small>33 ta o‘quv guruhi</small></div>${bars(
-      [
-        ["1-kurs · 74 kursant", 30],
-        ["3-kurs · 89 kursant", 36],
-        ["5-kurs · 84 kursant", 34],
-      ],
-      "%",
-    )}<div class="distribution-summary"><div><strong>33</strong><small>O‘quv guruhi</small></div><div><strong>3</strong><small>Ko‘rsatilgan kurs</small></div></div>`,
-    "",
+    `<div class="body"><div class="chart-total"><strong>247</strong><small>Kursantlar jami · 33 ta o‘quv guruhi</small></div><div class="distribution-list">${[["1-kurs",74,30],["3-kurs",89,36],["5-kurs",84,34]].map(([name,count,percent]) => `<div class="distribution-item"><div class="distribution-label"><span>${name}</span><span><strong>${count}</strong> · ${percent}%</span></div><progress value="${percent}" max="100" aria-label="${name}: ${count} kursant, ${percent}%"></progress></div>`).join("")}</div><div class="distribution-summary"><div><strong>33</strong><small>O‘quv guruhi</small></div><div><strong>3</strong><small>Ko‘rsatilgan kurs</small></div></div></div>`,
+    "course-distribution",
     "",
     "group",
   );
@@ -979,8 +972,8 @@ function institutionAdmin(page) {
   ];
   const matrix = panel(
     "Davomat va o‘zlashtirish",
-    `<div class="body"><h3>Guruhlar kesimida</h3><small>Y o‘qi — o‘rtacha baho / 100</small><div class="matrix" role="img" aria-label="Namunaviy 12 guruhning davomat va baho ko‘rsatkichlari">${points.map(([x, y], i) => `<i class="${i < 5 ? "warn" : ""}" style="--x:${x};--y:${y}" title="Davomat ${x}% · baho ${y}/100"></i>`).join("")}</div><div class="matrix-axis"><span>0%</span><span>Davomat</span><span>100%</span></div><p class="matrix-caption">Kuzgi semestr · 12 ta namunaviy guruh</p></div>`,
-    "",
+    `<div class="body"><div class="chart-total"><strong>${points.length} ta guruh</strong><small>Kuzgi semestr · sintetik ko‘rsatkichlar</small></div><div class="scatter-chart" role="img" aria-label="12 guruh. Gorizontal o‘q: davomat 40–100 foiz. Vertikal o‘q: o‘rtacha baho 30–100 ball. ${points.map(([x,y]) => `Davomat ${x}%, baho ${y}`).join('; ')}"><span class="scatter-y-label">Baho / 100</span><div class="scatter-y-ticks" aria-hidden="true">${[100,86,72,58,44,30].map(n=>`<span>${n}</span>`).join("")}</div><div class="scatter-plot">${points.map(([x,y])=>`<i class="${y < 70 ? "below-target" : "at-target"}" style="--x:${(x-40)/60*100};--y:${(y-30)/70*100}" title="Davomat ${x}% · baho ${y}/100"></i>`).join("")}</div><div class="scatter-x-ticks" aria-hidden="true">${[40,50,60,70,80,90,100].map(n=>`<span>${n}</span>`).join("")}</div><span class="scatter-x-label">Davomat, %</span></div><ul class="chart-legend" aria-label="Nuqtalar rangining ma’nosi"><li><i class="at-target"></i><span>70 ball va yuqori <strong>${points.filter(([,y])=>y>=70).length} guruh</strong></span></li><li><i class="below-target"></i><span>70 balldan past <strong>${points.filter(([,y])=>y<70).length} guruh</strong></span></li></ul></div>`,
+    "attendance-scatter",
     "",
     "chart",
   );
